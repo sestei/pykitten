@@ -30,11 +30,11 @@ def plot(logscale='auto'):
     return plotting.default_plot(run(), logscale)
 
 #TODO: make better use of the logging possibilities, e.g. write to file
-logging.basicConfig(format='[%(levelname)s] %(message)s', level=logging.INFO)
+logging.basicConfig(format='[%(levelname)s] %(message)s', level=logging.WARNING)
 
 def set_log_level(level):
-    #FIXME: doesn't work
-    logging.basicConfig(level=level)
+    l = logging.getLogger()
+    l.level = level
 
 # beam dump (providing 'dump' node) is always available
 BeamDump()

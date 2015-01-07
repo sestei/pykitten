@@ -6,9 +6,19 @@ def decades(data):
     return pl.log10(abs(data.max() / data.min()))
 
 def guess_logscale(data):
-    if data.min() == 0.0:
+    """
+    guess_logscale
+
+    Try to guess whether we want a logarithmic axis
+    for this type of data.
+    """
+    if data.min() <= 1e-30:
+        # no log scale for negative or 'zero' data
         return False
     else:
+        # need at least 3 decades,
+        # the <20 hopefully rules out cases where there
+        # are values close to zero
         return 3 < decades(data) < 20
 
 def pyplot_plot(data, logscale='auto'):

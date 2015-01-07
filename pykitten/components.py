@@ -94,3 +94,67 @@ class Laser(Component):
 			self.output.targetname,
 			**self._kwargs
 		)
+
+class Isolator(Component):
+	"""
+	TODO: optional output of dumped beam is not supported yet,
+		  not sure how to implement this
+	"""
+	def __init__(self, name, **kwargs):
+		super(Isolator, self).__init__(name, 
+			[('a', 'input'), ('b', 'output')])
+		self._kwargs = kwargs
+
+	def create_pykat_object(self):
+		return pkc.isolator(
+				self.name,
+				self.input.targetname,
+				self.output.targetname,
+				**self._kwargs
+			)
+
+class Lens(Component):
+	def __init__(self, name, **kwargs):
+		super(Lens, self).__init__(name, 
+			[('a', 'input'), ('b', 'output')])
+		self._kwargs = kwargs
+
+	def create_pykat_object(self):
+		return pkc.lens(
+			self.name, 
+			self.input.targetname,
+			self.output.targetname,
+			**self._kwargs
+		)
+
+class Squeezer(Component):
+	def __init__(self, name, **kwargs):
+		super(Squeezer, self).__init__(name, [('a', 'output')])
+		self._kwargs = kwargs
+
+	def create_pykat_object(self):
+		return pkc.squeezer(
+			self.name, 
+			self.output.targetname,
+			**self._kwargs
+		)
+
+class Modulator(Component):
+	def __init__(self, name, f, midx, order, **kwargs):
+		super(Modulator, self).__init__(name, 
+			[('a', 'input'), ('b', 'output')])
+		self._kwargs = kwargs
+		self._f = f
+		self._midx = midx
+		self._order = order
+
+	def create_pykat_object(self):
+		return pkc.lens(
+			self.name, 
+			self.input.targetname,
+			self.output.targetname,
+			self._f,
+			self._midx,
+			self._order,
+			**self._kwargs
+		)

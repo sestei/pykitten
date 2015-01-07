@@ -94,7 +94,9 @@ class World(object):
     def show_kat_commands(self):
         try:
             kat_commands = self._kat.generateKatScript()
+            print '================================= Generated Kat Script =='
             print ''.join(kat_commands)
+            print '========================================================='
         except AttributeError:
             raise NoKatException()
 
