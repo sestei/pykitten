@@ -12,11 +12,15 @@ class Component(PyKatObject):
 		super(Component,self).__init__(name)
 		self._ports = self.create_ports(ports,Port)
 		World.Instance().register_component(self)
+
+	def create_remaining_nodes(self):
+		for port in self._ports:
+			port.create_target()
 	
 class BeamDump(Component):
 	def __init__(self):
 		super(BeamDump, self).__init__('dump', [])
-		self.input = DumpPort()
+		self.input = DumpPort(self)
 		self._ports = [self.input]
 
 	def create_pykat_object(self):
@@ -53,7 +57,7 @@ def auto_reflectivity(kwargs):
 
 class Mirror(Component):
 	def __init__(self, name, **kwargs):
-		super(Mirror, self).__init__(name, [('a', 'west', 'input'),('b', 'east', 'output')])
+		super(Mirror, self).__init__(name, [('fr', 'west', 'input'),('bk', 'east', 'output')])
 		self._kwargs = auto_reflectivity(kwargs)
 
 	def create_pykat_object(self):
@@ -67,10 +71,10 @@ class Mirror(Component):
 class BeamSplitter(Component):
 	def __init__(self, name, **kwargs):
 		super(BeamSplitter, self).__init__(name,
-										  [('a', 'west'),
-										   ('b', 'north'),
-										   ('c', 'east'),
-										   ('d', 'south')])
+										  [('frA', 'west', 'W'),
+										   ('bkA', 'north', 'N'),
+										   ('frB', 'east', 'E'),
+										   ('bkB', 'south', 'S')])
 		self._kwargs = auto_reflectivity(kwargs)
 		
 	def create_pykat_object(self):
@@ -116,7 +120,7 @@ class Isolator(Component):
 class Lens(Component):
 	def __init__(self, name, **kwargs):
 		super(Lens, self).__init__(name, 
-			[('a', 'input'), ('b', 'output')])
+			[('fr', 'input'), ('bk', 'output')])
 		self._kwargs = kwargs
 
 	def create_pykat_object(self):

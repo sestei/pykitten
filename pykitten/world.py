@@ -122,7 +122,7 @@ class World(object):
 class NodeNetwork(object):
     def __init__(self):
         self._nodes = []
-        self._node_counter = 1000
+        self._node_counter = 999
 
     def register(self, node):
         node.index = self.generate_unique_id()

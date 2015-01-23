@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import logging
 from world import World
 from ports import DetectorPort
 from pkobject import PyKatObject
@@ -14,6 +15,12 @@ class Detector(PyKatObject):
 	def __rshift__(self, other):
 		# this is different to components, we always connect to the input
 		return self.input >> other
+
+	def create_remaining_nodes(self):
+		for port in self._ports:
+			if not port.target:
+				logging.warning('Unconnected detector found: ' + str(self))
+				port.create_target()
 
 class PD(Detector):
 	def __init__(self, name, **kwargs):
@@ -31,7 +38,7 @@ class PD(Detector):
 		alt = self.input.targetname[-1] == '*'
 		return pkd.pd(
 			self.name,
-			self._num_demods 
+			self._num_demods,
 			self.input.targetname,
 			alternate_beam = alt,
 			**self._kwargs
@@ -82,7 +89,7 @@ class QnoiseD(Detector):
 		alt = self.input.targetname[-1] == '*'
 		return pkd.qnoised(
 			self.name,
-			self._num_demods 
+			self._num_demods,
 			self.input.targetname,
 			alternate_beam = alt,
 			**self._kwargs
@@ -101,7 +108,7 @@ class QShot(Detector):
 		alt = self.input.targetname[-1] == '*'
 		return pkd.qshot(
 			self.name,
-			self._num_demods 
+			self._num_demods,
 			self.input.targetname,
 			alternate_beam = alt,
 			**self._kwargs

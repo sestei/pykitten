@@ -13,7 +13,7 @@ class PyKatObject(object):
     def create_ports(self, ports, porttype):
         plist = []
         for pnames in ports:
-            cp = porttype()
+            cp = porttype(self)
             plist.append(cp)
             if not (type(pnames) == tuple):
                 pnames = (pnames,) # convert to tuple
@@ -21,12 +21,16 @@ class PyKatObject(object):
                 setattr(self, pn, cp)
         return plist
 
+    def create_remaining_nodes(self):
+        raise NotImplemented()
+
     @property
     def pykat_object(self):
         if self._pykat_object:
             return self._pykat_object
         else:
             logging.info('Creating pykat object for {0}'.format(self.name))
+            self.create_remaining_nodes()
             self._pykat_object = self.create_pykat_object()
             return self._pykat_object
     

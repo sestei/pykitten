@@ -47,9 +47,38 @@ Here's how the above looks like in pykitten (complete working example):
   plot()
 ```
 
-Notice the omission of node names where they are not needed, separation of
-parameters and configuration, as well as the easy creation of spaces without
-having to keep track of individual node names.
+Components are connected with the `>>` operator,
+
+```python
+  l1 >> mXend
+```
+
+Numbers between components are automatically interpreted as spaces,
+
+```python
+  l1 >> 1.0 >> mXend
+```
+This creates a space of 1m between ``l1`` and ``mXend``. Optionally, you can specify a refractive index by giving a tuple, e.g. ``(1, 1.44)`` would create a 1m space with a refractive index of 1.44.
+
+Node names can be omitted when there's an obvious input-output configuration, but can also be specified explicitly,
+
+```python
+  l1.output >> 1.0 >> mXend.fr
+```
+Here, ``fr`` is borrowed from Optickle, ``mXend.input`` can be used interchangeably (and ``mXend.output`` is the same as ``mXend.bk``). For components with more than two nodes, the node names cannot be ommitted.
+
+For photo diodes, the connection direction makes a difference. This code will look at the light reflected from the mirror,
+```python
+  l1 >> 1.0 >> mXend
+  pd >> mXend.input
+```
+(in this case, the ``.input`` could have been omitted). To look at the light coming from the laser, use:
+```python
+  l1 >> 1.0 >> mXend
+  mXend.input >> pd
+```
+(here, the ``.input`` cannot be omitted, because ``mXend >> pd`` would normally expand to ``mXend.output >> pd.input`` and thus look at the transmitted light.)
+
 
 Goals of pykitten
 -----------------
