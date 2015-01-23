@@ -16,18 +16,18 @@ def reset():
 def build():
     return get_world().build()
 
-def xaxis(*args, **kwargs):
-    get_world().xaxis(args, kwargs)
-
 def show_kat_commands():
     get_world().show_kat_commands()
 
-def run():
-    return get_world().run()
+def xaxis(*args, **kwargs):
+    get_world().xaxis(args, kwargs)
 
 def plot(logscale='auto'):
     #TODO: maybe don't call run here, should be called explicitly by the user?
-    return plotting.default_plot(run(), logscale)
+    return plotting.default_plot(get_world().run(), logscale)
+
+def add_signal(target, amplitude, phase, name=None):
+    get_world().add_signal(target, amplitude, phase, name)
 
 #TODO: make better use of the logging possibilities, e.g. write to file
 logging.basicConfig(format='[%(levelname)s] %(message)s', level=logging.WARNING)

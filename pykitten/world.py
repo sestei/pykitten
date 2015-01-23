@@ -29,21 +29,33 @@ class World(object):
     # This is completely un-pythonic, but makes our nice-and-simple 
     # syntax work automagically. Just be warned that there might be
     # dragons out there...
-    def register(self, other):
+    def register(self, other, name=None):
         import __main__
-        logging.info('Registering object "{0}"'.format(other.name))
-        if hasattr(__main__, other.name):
+        if not name:
+            try:
+                name = other.name
+            except AttributeError:
+                logging.warning('Tried to register an object without giving a name.')
+                return
+        logging.info('Registering object "{0}"'.format(name))
+        if hasattr(__main__, name):
             raise AlreadyRegisteredException(
-                'An object called "{0}" already exists.'.format(other.name))
-        setattr(__main__, other.name, other)
+                'An object called "{0}" already exists.'.format(name))
+        setattr(__main__, name, other)
 
-    def remove(self, other):
+    def remove(self, other=None, name=None):
         import __main__
-        logging.info('Removing object {0}'.format(other.name))
+        if not name:
+            try:
+                name = other.name
+            except AttributeError:
+                logging.warning('Tried to remove an object without giving a name.')
+                return
+        logging.info('Removing object {0}'.format(name))
         try:
-            delattr(__main__, other.name)
+            delattr(__main__, name)
         except NameError:
-            logging.warning('No object called "{0}" was registered.'.format(other.name))
+            logging.warning('No object called "{0}" was registered.'.format(name))
 
     def get_free_name(self, shorthand):
         import __main__
@@ -81,6 +93,8 @@ class World(object):
                 self._kat.add(pykat_object)
         for d in self._detectors:
             self._kat.add(d.pykat_object)
+
+        self.register(self._kat.signals, 'signals')
         return self._kat
 
     def xaxis(self, args, kwargs):
@@ -89,7 +103,14 @@ class World(object):
             self._kat.add(_xaxis)
         except AttributeError:
             raise NoKatException()
+        self.remove(name='xaxis')
+        self.register(self._kat.xaxis, 'xaxis')
 
+    def add_signal(self, target, amplitude, phase, name=None):
+        try:
+            self._kat.signals.apply(target, amplitude, phase, name)
+        except AttributeError:
+            raise NoKatException()
 
     def show_kat_commands(self):
         try:

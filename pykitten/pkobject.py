@@ -7,8 +7,8 @@ class AutoConnectException(Exception):
 
 class PyKatObject(object):
     def __init__(self, name):
-        self.name = name
         self._pykat_object = None
+        self.name = name
     
     def create_ports(self, ports, porttype):
         plist = []
@@ -44,6 +44,14 @@ class PyKatObject(object):
             return AttributeError(("'{0}' has no attribute '{1}'. " +
                     "Did you try to access pykat properties before calling build()?").format(
                         self.__class__.__name__, attr))
+
+    def __setattr__(self, attr, value):
+        # avoid infinite recursion with __getattr__ while _pykat_object is not set
+        if attr != '_pykat_object' and self._pykat_object:
+            if hasattr(self._pykat_object, attr):
+                return self._pykat_object.__setattr__(attr,value)
+        else:
+            return super(PyKatObject,self).__setattr__(attr,value)
 
     @property
     def input(self):

@@ -76,9 +76,9 @@ class BP(Detector):
 			alternate_beam = alt
 		)
 
-class QnoiseD(Detector):
+class QNoiseD(Detector):
 	def __init__(self, name, **kwargs):
-		super(QnoiseD, self).__init__(name, ['input'])
+		super(QNoiseD, self).__init__(name, ['input'])
 		self._num_demods = 0
 		if 'num_demods' in kwargs:
 			self._num_demods = kwargs['num_demods']
@@ -116,7 +116,7 @@ class QShot(Detector):
 
 class Motion(Detector):
 	def __init__(self, name, component, motion):
-		super(QShot, self).__init__(name, [])
+		super(Motion, self).__init__(name, [])
 		self._component = component.name
 		self._motion = motion
 		

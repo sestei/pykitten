@@ -70,14 +70,16 @@ Here, ``fr`` is borrowed from Optickle, ``mXend.input`` can be used interchangea
 For photo diodes, the connection direction makes a difference. This code will look at the light reflected from the mirror,
 ```python
   l1 >> 1.0 >> mXend
-  pd >> mXend.input
-```
-(in this case, the ``.input`` could have been omitted). To look at the light coming from the laser, use:
-```python
-  l1 >> 1.0 >> mXend
   mXend.input >> pd
 ```
-(here, the ``.input`` cannot be omitted, because ``mXend >> pd`` would normally expand to ``mXend.output >> pd.input`` and thus look at the transmitted light.)
+Here, the ``.input`` cannot be omitted, because ``mXend >> pd`` would normally expand to ``mXend.output >> pd.input`` and thus look at the transmitted light.
+
+To look at the light coming from the laser, use:
+```python
+  l1 >> 1.0 >> mXend
+  pd >> mXend.input
+```
+In this case, the ``.input`` could have been omitted.
 
 
 Goals of pykitten
