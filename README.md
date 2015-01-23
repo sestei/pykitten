@@ -47,7 +47,9 @@ Here's how the above looks like in pykitten (complete working example):
   plot()
 ```
 
-Components are connected with the `>>` operator,
+Components are created with simple commands and must be given a name by which they can be accessed afterwards. Optional parameters, as in PyKat, are supported for most components. Pykitten tries to be smart about mirror reflectivities, i.e. if you only specify reflectivity or only transmissivity, it will assume zero loss and thus calculate the missing values from R+T=1. As soon as you specify loss, pykitten assumes you know what you're doing and stops automatic calculation.
+
+Components are connected with the `>>` operator without the need to keep track of unique node names,
 
 ```python
   l1 >> mXend
@@ -60,12 +62,12 @@ Numbers between components are automatically interpreted as spaces,
 ```
 This creates a space of 1m between ``l1`` and ``mXend``. Optionally, you can specify a refractive index by giving a tuple, e.g. ``(1, 1.44)`` would create a 1m space with a refractive index of 1.44.
 
-Node names can be omitted when there's an obvious input-output configuration, but can also be specified explicitly,
+Port names can be omitted when there's an obvious input-output configuration, but can also be specified explicitly,
 
 ```python
   l1.output >> 1.0 >> mXend.fr
 ```
-Here, ``fr`` is borrowed from Optickle, ``mXend.input`` can be used interchangeably (and ``mXend.output`` is the same as ``mXend.bk``). For components with more than two nodes, the node names cannot be ommitted.
+Here, ``fr`` is borrowed from Optickle, ``mXend.input`` can be used interchangeably (and ``mXend.output`` is the same as ``mXend.bk``). For components with more than two ports, the port names cannot be ommitted.
 
 For photo diodes, the connection direction makes a difference. This code will look at the light reflected from the mirror,
 ```python
@@ -90,11 +92,13 @@ Goals of pykitten
 - provide full access to PyKat if needed
 - stick to the basics, more advanced simulations might still use pykitten
   for setting up the simulation, but will then use PyKat for all analysis
+  (``build()`` actually returns a ``kat`` object, so this can be used for
+  full access to PyKat)
 
 Status
 ------
 - rudimentary work flow implemented
-- very few components and commands supported
+- very few components and commands supported/tested
   
 ---
 -- Sebastian Steinlechner, 2014
